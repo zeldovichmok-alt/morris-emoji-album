@@ -270,3 +270,37 @@ textarea {
   font-size: 0.75rem;
   white-space: pre-wrap;
 }
+
+.emoji-world {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.emoji-body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 64px;
+  height: 64px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: grab;
+  font-size: 3.25rem;
+  line-height: 1;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.emoji-body:active {
+  cursor: grabbing;
+}
+
+.emoji-body:focus-visible {
+  outline: 3px solid #191919;
+  outline-offset: 4px;
+  border-radius: 8px;
+}
