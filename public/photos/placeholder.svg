@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800" role="img" aria-label="Travel photo placeholder">
+  <rect width="800" height="800" fill="#f4f4f4"/>
+  <circle cx="400" cy="330" r="120" fill="#d8f3dc"/>
+  <path d="M120 660 320 430 445 565 535 460 680 660Z" fill="#bde0fe"/>
+  <text x="400" y="390" text-anchor="middle" font-size="96" font-family="Arial, sans-serif">📷</text>
+  <text x="400" y="720" text-anchor="middle" font-size="42" font-family="Arial, sans-serif" fill="#777">photo</text>
+</svg>
