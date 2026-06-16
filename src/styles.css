@@ -319,3 +319,29 @@ textarea {
   outline-offset: 4px;
   border-radius: 8px;
 }
+
+@media (max-width: 520px) {
+  .album-title {
+    top: 12vh;
+  }
+
+  .album-cover-emoji {
+    font-size: 2.6rem;
+  }
+
+  .emoji-body {
+    width: 56px;
+    height: 56px;
+    font-size: 2.85rem;
+  }
+
+  .memory-header {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .memory-meta {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+}
