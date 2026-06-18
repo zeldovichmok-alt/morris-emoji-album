@@ -25,7 +25,7 @@ describe("App", () => {
       screen.getByRole("link", { name: "Morris Chen" }),
     ).toHaveAttribute("href", "https://www.instagram.com/zel.dovichmok/");
     expect(
-      screen.getByRole("link", { name: /Olla Kuzovkina/ }),
+      screen.getByRole("link", { name: "Olla Kuzovkina" }),
     ).toHaveAttribute("href", "https://www.instagram.com/olla.kuzovkina/");
   });
 

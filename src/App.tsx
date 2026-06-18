@@ -64,7 +64,7 @@ export default function App() {
             target="_blank"
             rel="noreferrer"
           >
-            Olla Kuzovkina 🇺🇦
+            Olla Kuzovkina
           </a>
         </p>
       </aside>
