@@ -7,13 +7,35 @@ beforeEach(() => {
 });
 
 describe("App", () => {
+  it("renders the Morris title without the decorative cover emoji", () => {
+    render(<App />);
+
+    expect(
+      screen.getByRole("heading", { name: "Morris Emoji Album" }),
+    ).toBeInTheDocument();
+    expect(document.querySelector(".album-cover-emoji")).not.toBeInTheDocument();
+  });
+
+  it("renders design credit links only on the names", () => {
+    render(<App />);
+
+    expect(screen.getByText("Website design by")).toBeInTheDocument();
+    expect(screen.getByText("Title type design by")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Morris Chen" }),
+    ).toHaveAttribute("href", "https://www.instagram.com/zel.dovichmok/");
+    expect(
+      screen.getByRole("link", { name: /Olla Kuzovkina/ }),
+    ).toHaveAttribute("href", "https://www.instagram.com/olla.kuzovkina/");
+  });
+
   it("opens a memory modal from an emoji", () => {
     render(<App />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Open Keukenhof" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open Hong Kong" }));
 
     expect(
-      screen.getByRole("dialog", { name: "Keukenhof" }),
+      screen.getByRole("dialog", { name: "Hong Kong" }),
     ).toBeInTheDocument();
   });
 

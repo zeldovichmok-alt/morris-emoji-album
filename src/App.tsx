@@ -46,9 +46,31 @@ export default function App() {
 
   return (
     <main className="album-page">
+      <aside className="site-credits" aria-label="Site credits">
+        <p>
+          Website design by{" "}
+          <a
+            href="https://www.instagram.com/zel.dovichmok/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Morris Chen
+          </a>
+        </p>
+        <p>
+          Title type design by{" "}
+          <a
+            href="https://www.instagram.com/olla.kuzovkina/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Olla Kuzovkina 🇺🇦
+          </a>
+        </p>
+      </aside>
+
       <section className="album-title" aria-label="Album title">
-        <div className="album-cover-emoji">🙈</div>
-        <h1>My Emoji Album</h1>
+        <h1>Morris Emoji Album</h1>
         <p>2024-2026</p>
         <button
           className="add-record-button"

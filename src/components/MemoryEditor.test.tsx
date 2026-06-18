@@ -29,9 +29,6 @@ describe("MemoryEditor", () => {
     fireEvent.change(screen.getByLabelText("Caption"), {
       target: { value: "The train window looked like a movie." },
     });
-    fireEvent.change(screen.getByLabelText("Tags"), {
-      target: { value: "train, japan" },
-    });
     fireEvent.change(screen.getByLabelText("Photo paths"), {
       target: {
         value: Array.from(
@@ -48,9 +45,22 @@ describe("MemoryEditor", () => {
         emoji: "🚄",
         title: "Train Day",
         location: "Tokyo, Japan",
+        tags: [],
         photos: expect.arrayContaining(["/photos/train/1.jpg"]),
       }),
     );
+  });
+
+  it("does not show tag inputs in the editor", () => {
+    render(
+      <MemoryEditor
+        localRecords={[]}
+        onSave={() => undefined}
+        onClose={() => undefined}
+      />,
+    );
+
+    expect(screen.queryByLabelText("Tags")).not.toBeInTheDocument();
   });
 
   it("shows exported JSON for local records", () => {

@@ -13,7 +13,7 @@ describe("EmojiWorld", () => {
     );
 
     expect(
-      screen.getByRole("button", { name: "Open Keukenhof" }),
+      screen.getByRole("button", { name: "Open Hong Kong" }),
     ).toBeInTheDocument();
     expect(screen.getAllByRole("button")).toHaveLength(starterMemories.length);
   });
@@ -28,8 +28,38 @@ describe("EmojiWorld", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Open Keukenhof" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open Hong Kong" }));
 
-    expect(onSelectMemory).toHaveBeenCalledWith("keukenhof-2024");
+    expect(onSelectMemory).toHaveBeenCalledWith("hongkong-2024");
+  });
+
+  it("renders an image icon when a memory has iconSrc", () => {
+    render(
+      <EmojiWorld
+        memories={[
+          {
+            id: "hongkong-2026",
+            emoji: "🌃",
+            iconSrc: "/icons/hongkong.png",
+            title: "Hong Kong",
+            location: "Hong Kong",
+            date: "2026",
+            caption: "A bright city memory.",
+            tags: ["hongkong"],
+            photos: [],
+          },
+        ]}
+        onSelectMemory={() => undefined}
+      />,
+    );
+
+    expect(screen.getByRole("img", { name: "Hong Kong icon" })).toHaveAttribute(
+      "src",
+      "/icons/hongkong.png",
+    );
+    expect(screen.getByRole("img", { name: "Hong Kong icon" })).toHaveAttribute(
+      "draggable",
+      "false",
+    );
   });
 });

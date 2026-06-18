@@ -26,7 +26,6 @@ export function MemoryEditor({
   const [location, setLocation] = useState("");
   const [date, setDate] = useState("");
   const [caption, setCaption] = useState("");
-  const [tags, setTags] = useState("");
   const [photoPaths, setPhotoPaths] = useState("");
   const [exportJson, setExportJson] = useState("");
 
@@ -41,10 +40,7 @@ export function MemoryEditor({
       location: location.trim(),
       date: date.trim(),
       caption: caption.trim(),
-      tags: tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter(Boolean),
+      tags: [],
       photos: photoPaths
         .split(/\r?\n/)
         .map((path) => path.trim())
@@ -57,7 +53,6 @@ export function MemoryEditor({
     setLocation("");
     setDate("");
     setCaption("");
-    setTags("");
     setPhotoPaths("");
   }
 
@@ -113,15 +108,6 @@ export function MemoryEditor({
             onChange={(event) => setCaption(event.target.value)}
             aria-label="Caption"
             required
-          />
-        </label>
-        <label>
-          Tags
-          <input
-            value={tags}
-            onChange={(event) => setTags(event.target.value)}
-            aria-label="Tags"
-            placeholder="train, japan"
           />
         </label>
         <label>

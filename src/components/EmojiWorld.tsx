@@ -1,6 +1,12 @@
 import Matter from "matter-js";
 import { useEffect, useRef, useState } from "react";
 import type { TravelMemory } from "../data/albumData";
+import {
+  createEmojiDropDelay,
+  createEmojiSpawn,
+  emojiButtonStyle,
+  EMOJI_PHYSICS,
+} from "./emojiPhysics";
 
 type EmojiWorldProps = {
   memories: TravelMemory[];
@@ -13,8 +19,6 @@ type EmojiPosition = {
   y: number;
   angle: number;
 };
-
-const EMOJI_SIZE = 64;
 
 export function EmojiWorld({ memories, onSelectMemory }: EmojiWorldProps) {
   const worldRef = useRef<HTMLDivElement | null>(null);
@@ -76,22 +80,27 @@ export function EmojiWorld({ memories, onSelectMemory }: EmojiWorldProps) {
     let walls = createWalls();
     Matter.Composite.add(engine.world, [...walls, mouseConstraint]);
 
-    const bodies = memories.map((memory, index) => {
+    const dropTimers: number[] = [];
+    memories.forEach((memory, index) => {
       const { width } = bounds();
-      const x = 80 + ((index * 137) % Math.max(160, width - 160));
-      const y = -80 - index * 46;
-      const body = Matter.Bodies.circle(x, y, EMOJI_SIZE / 2, {
-        restitution: 0.28,
-        friction: 0.8,
-        frictionAir: 0.012,
+      const spawn = createEmojiSpawn(memory.id, index, width);
+      const body = Matter.Bodies.circle(spawn.x, spawn.y, EMOJI_PHYSICS.size / 2, {
+        restitution: EMOJI_PHYSICS.restitution,
+        friction: EMOJI_PHYSICS.friction,
+        frictionAir: EMOJI_PHYSICS.frictionAir,
         label: memory.id,
       });
+      Matter.Body.setAngle(body, spawn.angle);
+      Matter.Body.setVelocity(body, spawn.velocity);
+      Matter.Body.setAngularVelocity(body, spawn.angularVelocity);
 
       bodiesRef.current.set(memory.id, body);
-      return body;
+      const timer = window.setTimeout(() => {
+        Matter.Composite.add(engine.world, body);
+      }, createEmojiDropDelay(memory.id, index));
+      dropTimers.push(timer);
     });
 
-    Matter.Composite.add(engine.world, bodies);
     Matter.Runner.run(runner, engine);
 
     let frame = 0;
@@ -122,6 +131,7 @@ export function EmojiWorld({ memories, onSelectMemory }: EmojiWorldProps) {
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      dropTimers.forEach((timer) => window.clearTimeout(timer));
       window.cancelAnimationFrame(frame);
       Matter.Runner.stop(runner);
       Matter.Engine.clear(engine);
@@ -142,14 +152,24 @@ export function EmojiWorld({ memories, onSelectMemory }: EmojiWorldProps) {
             aria-label={`Open ${memory.title}`}
             onClick={() => onSelectMemory(memory.id)}
             style={{
+              ...emojiButtonStyle,
               transform: `translate(${
-                (position?.x ?? 0) - EMOJI_SIZE / 2
-              }px, ${(position?.y ?? 0) - EMOJI_SIZE / 2}px) rotate(${
+                (position?.x ?? 0) - EMOJI_PHYSICS.size / 2
+              }px, ${(position?.y ?? 0) - EMOJI_PHYSICS.size / 2}px) rotate(${
                 position?.angle ?? 0
               }rad)`,
             }}
           >
-            {memory.emoji}
+            {memory.iconSrc ? (
+              <img
+                className="emoji-image"
+                src={memory.iconSrc}
+                alt={`${memory.title} icon`}
+                draggable={false}
+              />
+            ) : (
+              memory.emoji
+            )}
           </button>
         );
       })}
