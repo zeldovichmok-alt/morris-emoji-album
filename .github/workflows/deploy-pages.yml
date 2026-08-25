@@ -1,5 +1,7 @@
 name: Deploy to GitHub Pages
 
+# The repository Pages source is configured to use this workflow.
+
 on:
   push:
     branches: [main]
