@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { TravelMemory } from "../data/albumData";
 
 type MemoryModalProps = {
@@ -8,133 +8,59 @@ type MemoryModalProps = {
   onNext: () => void;
 };
 
-export function MemoryModal({
-  memory,
-  onClose,
-  onPrevious,
-  onNext,
-}: MemoryModalProps) {
-  const photos = memory.photos.slice(0, 9);
-  const [expandedPhoto, setExpandedPhoto] = useState<{
-    src: string;
-    alt: string;
-  } | null>(null);
-
-  useEffect(() => {
-    if (!expandedPhoto) return;
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setExpandedPhoto(null);
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [expandedPhoto]);
+export function MemoryModal({ memory, onClose, onPrevious, onNext }: MemoryModalProps) {
+  const [expandedPhoto, setExpandedPhoto] = useState<number | null>(null);
 
   return (
-    <div className="modal-backdrop">
-      <button
-        className="memory-nav memory-nav-left"
-        onClick={onPrevious}
-        aria-label="Previous memory"
-      >
-        ◀ prev
-      </button>
-
-      <article
-        className="memory-card"
+    <div className="modal-backdrop" onClick={onClose}>
+      <section
+        className="memory-modal"
         role="dialog"
         aria-modal="true"
         aria-label={memory.title}
+        onClick={(event) => event.stopPropagation()}
       >
-        <button
-          className="memory-close"
-          onClick={onClose}
-          aria-label="Close memory"
-        >
-          ×
-        </button>
         <header className="memory-header">
-          <div className="memory-emoji">
-            {memory.iconSrc ? (
-              <img
-                className="memory-icon-image"
-                src={memory.iconSrc}
-                alt={`${memory.title} icon`}
-              />
+          <div>
+            <p className="memory-kicker">{memory.date}</p>
+            <h2>{memory.title}</h2>
+            {memory.mapUrl ? (
+              <a href={memory.mapUrl} target="_blank" rel="noreferrer">{memory.location}</a>
             ) : (
-              memory.emoji
+              <p>{memory.location}</p>
             )}
           </div>
-          <div>
-            <h2>{memory.title}</h2>
-            <p>{memory.caption}</p>
-          </div>
+          <button type="button" onClick={onClose} aria-label="Close memory">×</button>
         </header>
-
+        <p className="memory-caption">{memory.caption}</p>
         <div className="photo-grid">
-          {photos.map((photo, index) => (
+          {memory.photos.map((photo, index) => (
             <button
-              key={`${photo}-${index}`}
               type="button"
-              className="photo-grid-button"
+              className="photo-tile"
+              key={`${photo}-${index}`}
               aria-label={`Expand ${memory.title} photo ${index + 1}`}
-              onClick={() =>
-                setExpandedPhoto({
-                  src: photo,
-                  alt: `Expanded ${memory.title} photo ${index + 1}`,
-                })
-              }
+              onClick={() => setExpandedPhoto(index)}
             >
               <img src={photo} alt={`${memory.title} photo ${index + 1}`} />
             </button>
           ))}
         </div>
-
-        <footer className="memory-meta">
-          <span>{memory.date}</span>
-          {memory.mapUrl ? (
-            <a href={memory.mapUrl} target="_blank" rel="noreferrer">
-              {memory.location}
-            </a>
-          ) : (
-            <span>{memory.location}</span>
-          )}
+        {memory.iconSrc ? <img className="memory-icon" src={memory.iconSrc} alt={`${memory.title} icon`} /> : null}
+        <footer className="memory-nav">
+          <button type="button" onClick={onPrevious} aria-label="Previous memory">← Previous</button>
+          <button type="button" onClick={onNext} aria-label="Next memory">Next →</button>
         </footer>
-      </article>
-
-      <button
-        className="memory-nav memory-nav-right"
-        onClick={onNext}
-        aria-label="Next memory"
-      >
-        next ▶
-      </button>
-
-      {expandedPhoto ? (
-        <div
-          className="photo-preview-backdrop"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Photo preview"
-        >
-          <button
-            type="button"
-            className="photo-preview-close"
-            aria-label="Close photo preview"
-            onClick={() => setExpandedPhoto(null)}
-          >
-            ×
-          </button>
-          <img
-            className="photo-preview-image"
-            src={expandedPhoto.src}
-            alt={expandedPhoto.alt}
-          />
+      </section>
+      {expandedPhoto !== null ? (
+        <div className="photo-preview-backdrop" onClick={() => setExpandedPhoto(null)}>
+          <div className="photo-preview" role="dialog" aria-label="Photo preview" onClick={(event) => event.stopPropagation()}>
+            <button type="button" onClick={() => setExpandedPhoto(null)} aria-label="Close photo preview">×</button>
+            <img src={memory.photos[expandedPhoto]} alt={`Expanded ${memory.title} photo ${expandedPhoto + 1}`} />
+          </div>
         </div>
       ) : null}
     </div>
   );
 }
+

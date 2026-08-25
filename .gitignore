@@ -1,8 +1,5 @@
 node_modules/
 dist/
-.superpowers/
 .vite/
-.env
-.env.local
-npm-debug.log*
-.vite-dev*.log
+*.tsbuildinfo
+
